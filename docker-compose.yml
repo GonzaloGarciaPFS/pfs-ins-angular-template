@@ -1,0 +1,23 @@
+version: '2.1'
+
+services:
+  ebox-webapp:
+    container_name: ebox-webapp-${ENV_NAME}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - ENV_NAME=${ENV_NAME}
+        - URL_PROXY=${URL_PROXY}
+    restart: always
+    ports:
+      - "8080:4300"
+    networks:
+      ebox-insurance-network:
+        aliases:
+          - ebox-insurance-network
+
+networks:
+  ebox-insurance-network:
+    name: ebox-insurance-network
+    external: true

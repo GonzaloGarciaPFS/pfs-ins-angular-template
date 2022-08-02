@@ -1,0 +1,32 @@
+
+server {
+  listen 4201;
+
+   # To allow special characters in headers
+ ignore_invalid_headers off;
+ # Allow any size file to be uploaded.
+ # Set to a value such as 1000m; to restrict file size to a specific value
+ client_max_body_size 0;
+ # To disable buffering
+ proxy_buffering off;
+
+ 
+  location / {
+    root /usr/share/nginx/html;
+    index index.html index.htm;
+    try_files $uri $uri/ /index.html =404;
+  }
+  location /api {
+      proxy_set_header X-Real-IP $remote_addr;
+      #proxy_set_header X-Forwarder-For $proxy_add_x_forwarded_for; # quita /api de la url
+      proxy_set_header Host $http_host;
+  
+      rewrite ^/api(/.*)$ $1 break;
+      proxy_pass https://localhost:8443/;
+      proxy_redirect off;
+      
+    }
+ 
+}
+
+
